@@ -234,59 +234,53 @@ Menu >>
 ```
 
 
-
-
-
-
-Selección de categoría (Familia->Sustancia). 
--------------------------------------------------
+## Selección de categoría (Familia->Sustancia). 
 
 
 containers
--id
--category_id
--laboratoy_id
--stand
--section
---deleted
---created
---modified
+  -id
+  -category_id
+  -laboratoy_id
+  -stand
+  -section
+  --deleted
+  --created
+  --modified
 
 control_numbers
--id
--category_id
--control_number
---deleted
---created
---modified
+  -id
+  -category_id
+  -control_number
+  --deleted
+  --created
+  --modified
 
 laboratories
--id
--name
---deleted
---created
---modified
-
-
+  -id
+  -name
+  --deleted
+  --created
+  --modified
 
 
 # 2 nota 
 
 Registrar nueva Sustancia: registro generico de la sustancia química. 
--> Familia a la que pertenece la sustancia química.
--> Nombre de la sustancia
--> NR numero de reactivo, numero de control.
--> Código de barra:  
+  -> Familia a la que pertenece la sustancia química.
+  -> Nombre de la sustancia
+  -> NR numero de reactivo, numero de control.
+  -> Código de barra:  
 
 Registrar nueva presentación: 
--> En su presentación de [   ]    
--> Unidad métrica:  @-> gramos, O-> mililitros
--> Laboratorio Fabricante de la sustancia química 
--> Código de barra:  
+  -> En su presentación de [   ]    
+  -> Unidad métrica:  @-> gramos, O-> mililitros
+  -> Laboratorio Fabricante de la sustancia química 
+  -> Código de barra:  
 
-Administrativo.
 
 ```
+Administrativo.
+
 Se lee el código de barras.
 
 	si existe el código de barras.
@@ -352,6 +346,7 @@ Se lee el código de barras.
 
 Generar un Solicitud. 
 
+```
 El solicitante busca es el código de barra del envase y especifica la cantidad que necesita.
 
 Menu->Familia->Sustancia 
@@ -359,7 +354,7 @@ Menu->Familia->Sustancia
 sistema-> nombre de la familia: Acetato
 sistema-> nombre de la sustancia: sodio
 sistema-> nr: 427
-
+```
 
 ```
        C EN 	  Estante	Tramo  fabricante	Código de Barras del envase  	
