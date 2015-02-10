@@ -1,0 +1,295 @@
+Sistema de inventario de sustancias quimicas:
+Preguntas a responder:
+1) ¿cuantos envaces hay?
+2) ¿cuanto hay en cada envace?
+3) ¿donde estan?
+
+###############################
+### Registrar Nueva Familia ###
+###############################
+
+Url: registrar_nueva_familia  :: new
+
+Accion:
+<registrar nueva familia>
+
+Dependencias:
+-> NULL
+
+Formulario
+-> Nombre
+
+Base De Datos
+-> id
+-> name
+-> created
+-> modified
+
+Vista
+-> text input -> nombre
+
+    Nombre    Acciones
+1)  familia   <Administrar>
+2)  familia   <Administrar>
+3)  familia   <Administrar>
+4)  familia   <Administrar>
+
+       ACCION: <Administrar> Modal con los siguientes campos:
+
+           [familia]
+
+           <Actualizar> <Borrar>
+
+
+##################################
+### Registrar Nueva Fabricante ###
+#################################
+
+Accion:
+<registrar nuevo fabricante>
+
+Dependencias:
+-> NULL
+
+Formulario
+-> Nombre
+
+Base De Datos
+-> id
+-> name
+-> created
+-> modified
+
+Vista
+-> text input -> nombre
+
+
+    Nombre              Acciones
+1)  nombre-fabricante   <Administrar>
+2)  nombre-fabricante   <Administrar>
+
+
+                            ACCION: <Administrar> Modal con los siguientes campos:
+
+                            [nombre-fabricante]
+
+                            <Actualizar> <Borrar>
+
+
+
+
+#################################
+### Registrar Nueva Sustancia ###
+#################################
+
+Accion:
+<registrar nueva sustancia>
+
+Dependencias:
+-> Familias
+
+Formulario:
+-> Familia a la que pertenece la sustacia quimica.
+-> Nombre de la sustancia.
+-> NR numero de reactivo o numero de control , permite determinar una sustancia por un numero corto facil de recordar.
+
+Base de datos:
+-> id
+-> familia_id
+-> nombre
+-> numero_reactivo
+-> created
+-> modified
+
+Vista:
+-> Selector -> Familia.
+-> text input -> nombre.
+-> text input -> numero del reactivo.
+
+
+Organisado por el nombre de la Familia
+
+    Familia             Nombre                 Numero-Reactivo            Acciones
+1)  nombre-familia      nombre-sustancia       numero                     <Administrar>
+2)  nombre-familia      nombre-sustancia       numero                     <Administrar>
+
+
+      ACCION: <Administrar> Modal con los siguientes campos:
+
+         [Selector >> Familia]
+         [nombre-sustancia]
+         [Numero-Reactivo]
+
+         <Actualizar> <Borrar>
+
+
+####################################
+### Registrar Nueva precentación ###
+####################################
+
+Accion:
+<registrar nueva precentación>
+
+Dependencia:
+-> Sustancia
+-> Fabricante
+
+Formulario:
+-> En su precentacion de [   ]
+-> Unidad metrica:  @-> gramos, O-> mililitros
+-> Laboratorio Fabricante de la sustancia quimica
+
+Base de datos:
+-> id
+-> sustancia_id
+-> fabricante_id
+-> precentacion
+-> unidad_metrica
+
+Vista:
+
+Selector Dependiente: Familia >> Sustancia = sustancia_id
+
+-> Selector -> Fabricante.
+-> text input -> precentacion
+-> radio input -> unidad metrica
+
+
+Organisado por el nombre de la Familia
+
+    Familia             Nombre                 Numero-Reactivo    Prencentación           Unidad_metrica              Fabricante                           Acciones
+1)  nombre-familia      nombre-sustancia       numero             nombre-Prencentación    nombre-unidad_metrica       nombre-fabricante                    <Administrar>
+2)  nombre-familia      nombre-sustancia       numero             nombre-Prencentación    nombre-unidad_metrica       nombre-fabricante                    <Administrar>
+
+
+                            ACCION: <Administrar> Modal con los siguientes campos:
+
+                            [Selector Dependiente >> Familia >> Sustancia]
+                            [Selector >> Fabricante]
+                            [Precentacion]
+                            [Unidad-metrica]
+
+                            <Actualizar> <Borrar>
+
+
+
+######################
+### Precentaciónes ###
+######################
+
+Dependencia:
+-> Sustancia
+-> Fabricante
+
+Base de datos:
+-> id
+-> sustancia_id
+-> fabricante_id
+-> precentacion
+-> unidad_metrica
+
+
+Selector Dependiente: Familia >> Sustancia = sustancia_id
+
+(Al tener definido completamente el selector dependiente se carga los datos siguientes){
+
+     sistema-> nombre de la familia: Acetato  ------------> redundante
+     sistema-> nombre de la sustancia: sodio  ------------> redundante
+     sistema-> nr: 427                        ------------> redundante
+
+
+    (si hay Precentaciónes se muestra){
+
+            Fabricante          Precentacion       Unidad-metrica
+        1)  Merck               200                g                <Administrar>
+        2)  Merck               1000               ml               <Administrar>
+        3)  Merck               100                ml               <Administrar>
+        3)  Otra Marca          100                g               <Administrar>
+
+        ACCION: <Administrar>  Modal con los siguientes campos:
+
+          [Selector >> Fabricante]
+          [Precentacion]
+          [Unidad-metrica]
+
+          <Actualizar> <Borrar>
+
+    }else{
+        <<se informa que no hay precentaciones hasta el momento para esta sustancia>>
+    }
+
+    <nueva precentacion>
+
+      [OCULTO sustancia_id] = sustancia_id selecionado en el selector dependiente.
+      [Selector >> Fabricante]
+      [Precentacion]
+      [Unidad-metrica]
+
+}
+
+
+###############
+### Envases ###
+###############
+
+Dependencia:
+-> Familia
+-> Sustancia
+-> Precentación
+
+Base de datos:
+precentación_id
+Cantidad en el Envace
+Estante
+Tramo
+
+
+Selector Dependiente: Familia >> Sustancia >> Precentación = precentacion_id
+
+(Al tener definido completamente el selector dependiente se carga los datos siguientes){
+
+     sistema-> nombre de la familia: Acetato  ------------> redundante
+     sistema-> nombre de la sustancia: sodio  ------------> redundante
+     sistema-> nr: 427                        ------------> redundante
+     sistema-> prencentación: 200 g           ------------> redundante
+     sistema-> unidad_metrica: g              ------------> redundante
+     sistema-> fabricante: Merck              ------------> redundante
+     sistema-> Total de envaces: 3
+     sistema-> Total de gramos: 490g
+
+(si hay envaces se muestra){
+
+        Cantidad en el Envace 	  Estante	    Tramo           Acciones
+    1)  190 g                     1		        1               <Administrar>
+    2)  200 g                     1		        1               <Administrar>
+    3)  100 g                     1		        1               <Administrar>
+    4)  100 g                     1		        1               <Administrar>
+
+    ACCION: <Administrar>  Modal con los siguientes campos:
+
+        [Cantidad en el Envace]
+        [Estante]
+        [Tramo]
+
+        <Actualizar> <Borrar>
+
+}
+
+(si no hay envaces se muestra){
+    <<se informa que no hay envaces para esta precentacion>>
+}
+
+
+<nuevo envase>
+    [Oculto precentacion_id] = precentacion_id selecionado en el selector dependiente.
+    [Cantidad en el Envace]
+    [Estante]
+    [Tramo]
+<nuevo lote>
+    [OCULTO precentacion_id] = precentacion_id selecionado en el selector dependiente.
+    [OCULTO Cantidad en el Envace] = Al valor de la precentación.
+    [Cantidad de Envaces]
+    [Estante]
+    [Tramo]
+
+}

@@ -1,0 +1,547 @@
+Sistema de inventario de sustancias quimicas:
+Preguntas a responder:
+1) ¿cuantos envaces hay?
+2) ¿cuanto hay en cada envace?
+3) ¿donde estan?
+
+###############################
+### Registrar Nueva Familia ###
+###############################
+
+Url: registrar_nueva_familia  :: new
+
+Accion:
+<registrar nueva familia>
+
+Dependencias:
+-> NULL
+
+Formulario
+-> Nombre
+
+Base De Datos
+-> id
+-> name
+-> created
+-> modified
+
+Vista
+-> text input -> nombre
+
+    Nombre    Acciones
+1)  familia   <Administrar>
+2)  familia   <Administrar>
+3)  familia   <Administrar>
+4)  familia   <Administrar>
+
+       ACCION: <Administrar> Modal con los siguientes campos:
+
+           [familia]
+
+           <Actualizar> <Borrar>
+
+
+##################################
+### Registrar Nueva Fabricante ###
+#################################
+
+Accion:
+<registrar nuevo fabricante>
+
+Dependencias:
+-> NULL
+
+Formulario
+-> Nombre
+
+Base De Datos
+-> id
+-> name
+-> created
+-> modified
+
+Vista
+-> text input -> nombre
+
+
+    Nombre              Acciones
+1)  nombre-fabricante   <Administrar>
+2)  nombre-fabricante   <Administrar>
+
+
+                            ACCION: <Administrar> Modal con los siguientes campos:
+
+                            [nombre-fabricante]
+
+                            <Actualizar> <Borrar>
+
+
+
+
+#################################
+### Registrar Nueva Sustancia ###
+#################################
+
+Accion:
+<registrar nueva sustancia>
+
+Dependencias:
+-> Familias
+
+Formulario:
+-> Familia a la que pertenece la sustacia quimica.
+-> Nombre de la sustancia.
+-> NR numero de reactivo o numero de control , permite determinar una sustancia por un numero corto facil de recordar.
+
+Base de datos:
+-> id
+-> familia_id
+-> nombre
+-> numero_reactivo
+-> created
+-> modified
+
+Vista:
+-> Selector -> Familia.
+-> text input -> nombre.
+-> text input -> numero del reactivo.
+
+
+Organisado por el nombre de la Familia
+
+    Familia             Nombre                 Numero-Reactivo            Acciones
+1)  nombre-familia      nombre-sustancia       numero                     <Administrar>
+2)  nombre-familia      nombre-sustancia       numero                     <Administrar>
+
+
+      ACCION: <Administrar> Modal con los siguientes campos:
+
+         [Selector >> Familia]
+         [nombre-sustancia]
+         [Numero-Reactivo]
+
+         <Actualizar> <Borrar>
+
+
+####################################
+### Registrar Nueva precentación ###
+####################################
+
+Accion:
+<registrar nueva precentación>
+
+Dependencia:
+-> Sustancia
+-> Fabricante
+
+Formulario:
+-> En su precentacion de [   ]
+-> Unidad metrica:  @-> gramos, O-> mililitros
+-> Laboratorio Fabricante de la sustancia quimica
+
+Base de datos:
+-> id
+-> sustancia_id
+-> fabricante_id
+-> precentacion
+-> unidad_metrica
+
+Vista:
+
+Selector Dependiente: Familia >> Sustancia = sustancia_id
+
+-> Selector -> Fabricante.
+-> text input -> precentacion
+-> radio input -> unidad metrica
+
+
+Organisado por el nombre de la Familia
+
+    Familia             Nombre                 Numero-Reactivo    Prencentación           Unidad_metrica              Fabricante                           Acciones
+1)  nombre-familia      nombre-sustancia       numero             nombre-Prencentación    nombre-unidad_metrica       nombre-fabricante                    <Administrar>
+2)  nombre-familia      nombre-sustancia       numero             nombre-Prencentación    nombre-unidad_metrica       nombre-fabricante                    <Administrar>
+
+
+                            ACCION: <Administrar> Modal con los siguientes campos:
+
+                            [Selector Dependiente >> Familia >> Sustancia]
+                            [Selector >> Fabricante]
+                            [Precentacion]
+                            [Unidad-metrica]
+
+                            <Actualizar> <Borrar>
+
+
+
+###############
+### Envases ###
+###############
+
+Dependencia:
+-> Familia
+-> Sustancia
+-> Precentación
+
+Base de datos:
+precentación_id
+Cantidad en el Envace
+Estante
+Tramo
+
+
+Selector Dependiente: Familia >> Sustancia >> Precentación = precentacion_id
+
+## Al tener definido completamente el selector dependiente se carga los datos siguientes: ##
+
+     sistema-> nombre de la familia: Acetato
+     sistema-> nombre de la sustancia: sodio
+     sistema-> nr: 427
+     sistema-> prencentación: 200 g
+     sistema-> unidad_metrica: g
+     sistema-> fabricante: Merck
+     sistema-> Total de envaces: 3
+     sistema-> Total de gramos: 490g
+
+(si hay envaces se muestra){
+
+        Cantidad en el Envace 	  Estante	    Tramo           Acciones
+    1)  190 g                     1		        1               <Administrar>
+    2)  200 g                     1		        1               <Administrar>
+    3)  100 g                     1		        1               <Administrar>
+    4)  100 g                     1		        1               <Administrar>
+
+    ACCION: <Administrar>  Modal con los siguientes campos:
+
+        [Cantidad en el Envace]
+        [Estante]
+        [Tramo]
+
+        <Actualizar> <Borrar>
+
+}
+
+(si no hay envaces se muestra){
+    <<se informa que no hay envaces para esta precentacion>>
+}
+
+
+<nuevo envase>
+    [Oculto precentacion_id] = precentacion_id selecionado en el selector dependiente.
+    [Cantidad en el Envace]
+    [Estante]
+    [Tramo]
+<nuevo lote>
+    [Oculto precentacion_id] = precentacion_id selecionado en el selector dependiente.
+    [Cantidad de Envaces]
+    [Estante]
+    [Tramo]
+
+
+########################################
+### Registrar Un Nuevo Envase o Lote ###
+#######################################
+
+Accion:
+<registrar un nuevo envase o lote>
+
+Dependencia:
+-> Familia
+-> Sustancia
+-> Precentación
+
+Base de datos:
+precentación_id
+Cantidad en el Envace
+Estante
+Tramo
+
+Formulario nuevo envace:
+Selector Dependiente: Familia >> Sustancia >> Precentación = precentacion_id
+[Cantidad en el Envace]
+[Estante]
+[Tramo]
+
+Formulario nuevo lote:
+Selector Dependiente: Familia >> Sustancia >> Precentación = precentacion_id
+[Cantidad de Envaces]
+[Estante]
+[Tramo]
+
+Organisado por el nombre de la Familia y Nombre-sustancia o Numero-Reactivo
+
+    Familia             nombre-sustancia        Numero-Reactivo    Prencentación           Unidad_metrica              Fabricante            Cantidad en el Envace 	  Estante	    Tramo           Acciones
+1)  nombre-familia      nombre                  numero             nombre-Prencentación    nombre-unidad_metrica       nombre-fabricante     190 g                   1		    1                   <Administrar> <Selecionar>
+2)  nombre-familia      nombre                  numero             nombre-Prencentación    nombre-unidad_metrica       nombre-fabricante     200 g                   1		    1                   <Administrar> <Selecionar>
+3)  nombre-familia      nombre                  numero             nombre-Prencentación    nombre-unidad_metrica       nombre-fabricante     100 g                   1		    1                   <Administrar> <Selecionar>
+
+
+     ACCION: <Administrar>  Modal con los siguientes campos:
+
+        [Selector Dependiente >> Familia >> Sustancia >> Precentación]
+        [Cantidad en el Envace]
+        [Estante]
+        [Tramo]
+
+        <Actualizar> <Borrar>
+
+
+#######################
+### Vista Principal ###
+#######################
+
+Menu >>
+    Familias >>
+        sustancias >> onClick{
+
+            (VISTA ADMINISTRATIVA){
+
+                (si hay envaces se muestra){
+
+                    Los datos precargados >>
+
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 3
+                        sistema-> Total de gramos: 490g
+
+                    El lote de sustancias >>
+
+                             C EN 	    Estante	    Tramo
+                        1->  190 g      1		    1         <Administrar> <Selecionar>               // Envace->id
+                        2->  200 g      1		    1         <Administrar> <Selecionar>               // Envace->id
+                        3->  100 g      2		    1         <Administrar> <Selecionar>               // Envace->id
+
+
+                            ACCION: <Administrar> Modal con los siguientes campos:
+
+                            [Cantidad en el Envace]
+                            [Estante]
+                            [Tramo]
+
+                            <Actualizar> <Borrar>
+
+
+                    La opcion de registrar nuevo lote o envace>>
+
+                        <registrar un lote nuevo>
+                            [Cantidad de Envaces]
+                            [Estante]
+                            [Tramo]
+
+                        <registra nuevo envace>
+                            [Cantidad en el Envace]
+                            [Estante]
+                            [Tramo]
+
+
+
+                }
+
+                (si no hay envaces se muestra){
+
+                    <<se informa que no hay envaces para esta precentacion>>
+
+                    Los datos precargados >>
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 0
+                        sistema-> Total de gramos: 0 g
+
+                    La opcion de registrar nuevo lote o envace>>
+
+                        <registrar un lote nuevo>
+                            [Cantidad de Envaces]
+                            [Estante]
+                            [Tramo]
+
+                        <registra nuevo envace>
+                            [Cantidad en el Envace]
+                            [Estante]
+                            [Tramo]
+
+
+                }
+            }
+
+            (VISTA USUARIO-Estudiante){
+
+                (si hay envaces se muestra){
+
+                    Los datos precargados >>
+
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 3
+                        sistema-> Total de gramos: 490g
+
+                    El lote de sustancias >>
+
+                             C EN 	    Estante	    Tramo
+                        1->  190 g      1		    1         <Selecionar>               // Envace->id
+                        2->  200 g      1		    1         <Selecionar>               // Envace->id
+                        3->  100 g      2		    1         <Selecionar>               // Envace->id
+
+
+                }
+
+                (si no hay envaces se muestra){
+
+                    <<<se informa que no hay envaces para esta precentacion>>>
+
+                    Los datos precargados >>
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 0
+                        sistema-> Total de gramos: 0 g
+
+
+                }
+            }
+
+}
+
+
+
+###################################
+### Registrar Un Nuevo Envase 2 ###
+###################################
+
+Accion:
+<registrar un lote nuevo o envase>
+
+Menu Acordión
+
+Menu >>
+    Familias >>
+        sustancias >> onClick{
+
+            (VISTA ADMINISTRATIVA){
+
+                (si hay envaces se muestra){
+
+                    Los datos precargados >>
+
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 3
+                        sistema-> Total de gramos: 490g
+
+                    El lote de sustancias >>
+
+                             C EN 	    Estante	    Tramo
+                        1->  190 g      1		    1         <Selecionar>               // Envace->id
+                        2->  200 g      1		    1         <Selecionar>               // Envace->id
+                        3->  100 g      2		    1         <Selecionar>               // Envace->id
+
+
+                            ACCION: <Selecionar> Modal con los siguientes campos:
+
+                            [C EN]
+                            [Estante]
+                            [Tramo]
+
+                            <Actualizar> <Borrar>
+
+
+
+
+                    La opcion de registrar nuevo lote >>
+
+                        <registrar un lote nuevo>
+                            [Cantidad]
+                            [Estante]
+                            [Tramo]
+
+                }
+
+                (si no hay envaces se muestra){
+
+                    <<se informa que no hay envaces para esta precentacion>>
+
+                    Los datos precargados >>
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 0
+                        sistema-> Total de gramos: 0 g
+
+                    La opcion de registrar nuevo lote >>
+
+                        <registrar un lote nuevo>
+                            [Cantidad]
+                            [Estante]
+                            [Tramo]
+
+                }
+            }
+
+            (VISTA USUARIO){
+
+                (si hay envaces se muestra){
+
+                    Los datos precargados >>
+
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 3
+                        sistema-> Total de gramos: 490g
+
+                    El lote de sustancias >>
+
+                             C EN 	    Estante	    Tramo
+                        1->  190 g      1		    1
+                        2->  200 g      1		    1
+                        3->  100 g      2		    1
+
+
+                }
+
+                (si no hay envaces se muestra){
+
+                    <<<se informa que no hay envaces para esta precentacion>>>
+
+                    Los datos precargados >>
+                        sistema-> nombre de la familia: Acetato
+                        sistema-> nombre de la sustancia: sodio
+                        sistema-> nr: 427
+                        sistema-> prencentación: 200 g
+                        sistema-> unidad_metrica: g
+                        sistema-> fabricante: Merck
+                        sistema-> Total de envaces: 0
+                        sistema-> Total de gramos: 0 g
+
+
+                }
+            }
+
+}
+
+
+

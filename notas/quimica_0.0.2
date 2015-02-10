@@ -1,0 +1,281 @@
+Sistema de inventario de sustancias quimicas:
+Preguntas a responder:
+1) ¿cuantos envaces hay?
+2) ¿cuanto hay en cada envace?
+3) ¿donde estan?
+
+
+(ETAPA 0){
+
+    nuevo > botton
+
+        Familia
+        Fabricante
+        Sustancia
+        Precentación
+        Envase
+
+
+    al selecionar.
+
+
+    el metodo en el controlador tiene las siguientes opciones.
+
+        Si retorna o no los resutados en formato json.
+        Si se define una retrollamada.
+
+
+}
+
+
+(ETAPA 1){
+
+    ################
+    ### Familias ###
+    ################
+
+    Url: registrar_nueva_familia  :: new
+
+    Accion:
+    <registrar nueva familia>
+
+    Dependencias:
+    -> NULL
+
+    Formulario
+    -> Nombre
+
+    Base De Datos
+    -> id
+    -> name
+    -> created
+    -> modified
+
+    Vista
+    -> text input -> nombre
+
+        Nombre    Acciones
+    1)  familia   <Administrar>
+    2)  familia   <Administrar>
+    3)  familia   <Administrar>
+    4)  familia   <Administrar>
+
+         ACCION: <Administrar> Modal con los siguientes campos:
+
+              [familia]
+
+              <Actualizar> <Borrar>
+
+
+    ###################
+    ### Fabricantes ###
+    ###################
+
+    Accion:
+    <registrar nuevo fabricante>
+
+    Dependencias:
+    -> NULL
+
+    Formulario
+    -> Nombre
+
+    Base De Datos
+    -> id
+    -> name
+    -> created
+    -> modified
+
+    Vista
+    -> text input -> nombre
+
+
+        Nombre              Acciones
+    1)  nombre-fabricante   <Administrar>
+    2)  nombre-fabricante   <Administrar>
+
+
+         ACCION: <Administrar> Modal con los siguientes campos:
+
+             [nombre-fabricante]
+
+             <Actualizar> <Borrar>
+
+
+}
+
+(ETAPA 1){
+
+    ##################
+    ### Sustancias ###
+    ##################
+
+    Dependencias:
+    -> Familias
+
+    Base de datos:
+    -> id
+    -> familia_id
+    -> nombre
+    -> numero_reactivo
+    -> created
+    -> modified
+
+    Selector : Familia >> = familia_id
+
+    (Al tener definido  el selector  se carga los datos siguientes){
+
+         sistema-> nombre de la familia: Acetato  ------------> redundante
+
+         (si hay sustancias se muestra){
+
+                Nombre                 Numero-Reactivo            Acciones
+            1)  nombre-sustancia       numero                     <Administrar>
+            2)  nombre-sustancia       numero                     <Administrar>
+
+
+            ACCION: <Administrar>  Modal con los siguientes campos:
+
+              [OCULTO id] = id del registro a modificar.
+              [nombre]
+              [numero_reactivo]
+
+              <Actualizar> <Borrar>
+
+
+         }else{
+             <<se informa que no hay familas sustancias hasta el momento para esta familia>>
+         }
+
+        <nueva sustancia>
+
+          [OCULTO familia_id] = familia_id selecionado en el selector dependiente.
+          [nombre]
+          [numero_reactivo]
+
+    }
+
+    ######################
+    ### Precentaciónes ###
+    ######################
+
+    Dependencia:
+    -> Sustancia
+    -> Fabricante
+
+    Base de datos:
+    -> id
+    -> sustancia_id
+    -> fabricante_id
+    -> precentacion
+    -> unidad_metrica
+
+
+    Selector Dependiente: Familia >> Sustancia = sustancia_id
+
+    (Al tener definido completamente el selector dependiente se carga los datos siguientes){
+
+         sistema-> nombre de la familia: Acetato  ------------> redundante
+         sistema-> nombre de la sustancia: sodio  ------------> redundante
+         sistema-> nr: 427                        ------------> redundante
+
+
+        (si hay Precentaciónes se muestra){
+
+                Fabricante          Precentacion       Unidad-metrica
+            1)  Merck               200                g                <Administrar>
+            2)  Merck               1000               ml               <Administrar>
+            3)  Merck               100                ml               <Administrar>
+            3)  Otra Marca          100                g               <Administrar>
+
+            ACCION: <Administrar>  Modal con los siguientes campos:
+
+              [Selector >> Fabricante]
+              [Precentacion]
+              [Unidad-metrica]
+
+              <Actualizar> <Borrar>
+
+        }else{
+            <<se informa que no hay precentaciones hasta el momento para esta sustancia>>
+        }
+
+        <nueva precentacion>
+
+          [OCULTO sustancia_id] = sustancia_id selecionado en el selector dependiente.
+          [Selector >> Fabricante]
+          [Precentacion]
+          [Unidad-metrica]
+
+    }
+
+
+    ###############
+    ### Envases ###
+    ###############
+
+    Dependencia:
+    -> Familia
+    -> Sustancia
+    -> Precentación
+
+    Base de datos:
+    precentación_id
+    Cantidad en el Envace
+    Estante
+    Tramo
+
+
+    Selector Dependiente: Familia >> Sustancia >> Precentación = precentacion_id
+
+    (Al tener definido completamente el selector dependiente se carga los datos siguientes){
+
+         sistema-> nombre de la familia: Acetato  ------------> redundante
+         sistema-> nombre de la sustancia: sodio  ------------> redundante
+         sistema-> nr: 427                        ------------> redundante
+         sistema-> prencentación: 200 g           ------------> redundante
+         sistema-> unidad_metrica: g              ------------> redundante
+         sistema-> fabricante: Merck              ------------> redundante
+         sistema-> Total de envaces: 3
+         sistema-> Total de gramos: 490g
+
+    (si hay envaces se muestra){
+
+            Cantidad en el Envace 	  Estante	    Tramo           Acciones
+        1)  190 g                     1		        1               <Administrar>
+        2)  200 g                     1		        1               <Administrar>
+        3)  100 g                     1		        1               <Administrar>
+        4)  100 g                     1		        1               <Administrar>
+
+        ACCION: <Administrar>  Modal con los siguientes campos:
+
+            [Cantidad en el Envace]
+            [Estante]
+            [Tramo]
+
+            <Actualizar> <Borrar>
+
+    }
+
+    (si no hay envaces se muestra){
+        <<se informa que no hay envaces para esta precentacion>>
+    }
+
+
+    <nuevo envase>
+        [Oculto precentacion_id] = precentacion_id selecionado en el selector dependiente.
+        [Cantidad en el Envace]
+        [Estante]
+        [Tramo]
+    <nuevo lote>
+        [OCULTO precentacion_id] = precentacion_id selecionado en el selector dependiente.
+        [OCULTO Cantidad en el Envace] = Al valor de la precentación.
+        [Cantidad de Envaces]
+        [Estante]
+        [Tramo]
+
+    }
+
+}
+
+

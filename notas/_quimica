@@ -1,0 +1,287 @@
+Sistema de inventario de sustancias quimicas:
+Preguntas a responder:
+1) ¿cuantos envaces hay?
+2) ¿cuanto hay en cada envace?
+3) ¿donde estan?
+
+###############################
+### Registrar Nueva Familia ###
+###############################
+
+Accion:
+<registrar nueva familia>
+
+Dependencias:
+-> NULL
+
+Formulario
+-> Nombre
+
+Base De Datos
+-> id
+-> name
+-> created
+-> modified
+
+Vista
+-> text input -> nombre
+
+##################################
+### Registrar Nueva Fabricante ###
+#################################
+
+Accion:
+<registrar nuevo fabricante>
+
+Dependencias:
+-> NULL
+
+Formulario
+-> Nombre
+
+Base De Datos
+-> id
+-> name
+-> created
+-> modified
+
+Vista
+-> text input -> nombre
+
+#################################
+### Registrar Nueva Sustancia ###
+#################################
+
+<registrar nueva sustancia>
+
+Dependencias:
+-> Familias
+
+Formulario:
+-> Familia a la que pertenece la sustacia quimica.
+-> Nombre de la sustancia.
+-> NR numero de reactivo o numero de control , permite determinar una sustancia por un numero corto facil de recordar.
+-> Codigo de barra de la sustancia, permite determinar una sustancia por condigo de barra.
+
+Base de datos:
+-> id
+-> familia_id
+-> nombre
+-> numero_reactivo
+-> codigo_barra_sustancia
+-> created
+-> modified
+
+Vista:
+
+-> Selector -> Familia.
+-> text input -> nombre
+-> text input -> numero del reactivo
+-> text input -> codigo de barra de la sustancia
+
+####################################
+### Registrar Nueva precentación ###
+####################################
+
+<registrar nueva precentación>
+
+
+Dependencia:
+-> Sustancia
+-> Fabricante
+
+Formulario:
+-> En su precentacion de [   ]
+-> Unidad metrica:  @-> gramos, O-> mililitros
+-> Laboratorio Fabricante de la sustancia quimica
+-------------------------------------------------------------------------------------------------------------------
+-> Codigo de barra de la precentacion, permite realizar una busqueda y registrar envaces bajo esa precentación.
+
+        | al leer el codigo de barras la la precentación: ->
+
+            sistema-> nombre de la familia: Acetato
+			sistema-> nombre de la sustancia: sodio
+			sistema-> nr: 427
+			sistema-> prencentación: 200g
+    		sistema-> fabricante: Merck
+    		sistema-> Codigo de Barras de la prencentación: {232003222132}
+
+
+        [listado de envaces registrados bajo esta precentacion]
+        <registrar un nuevo envace o lote bajo esta precentacion>
+-------------------------------------------------------------------------------------------------------------------
+
+
+Base de datos:
+-> id
+-> sustancia_id
+-> fabricante_id
+-> precentacion
+-> unidad_metrica
+-------------------------------------------------------------------------------------------------------------------
+-> codigo_barra
+-------------------------------------------------------------------------------------------------------------------
+
+Vista:
+
+-> Selector -> Sustancia.
+-> Selector -> Fabricante.
+-> text input -> precentacion
+-> radio input -> unidad metrica
+-> text input -> codigo de barra de la sustancia
+
+
+
+#################################
+### Registrar Un Nuevo Embace ###
+#################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Administrativo.
+
+Se lee el codigo de barras.
+
+	si existe el codigo de barras.
+		El sistema busca sustancias en stock
+			si hay envaces se muestra
+
+				Los datos precargados
+					sistema-> nombre de la familia: Acetato
+					sistema-> nombre de la sustancia: sodio
+					sistema-> nr: 427
+					sistema-> prencentación: 200g
+					sistema-> fabricante: Merck
+					sistema-> Codigo de Barras de la prencentación: {232003222132}
+
+				El lote de sustancias
+
+					 	 C EN 	  Estante	Tramo		Codigo de Barras del envace
+					1->  [190] g  [1]		[1]			{32165813215132}
+					2->  [200] g  [1]		[1]			{25475562131365}
+					3->  [100] g  [2]		[1]			{32165813352135}
+
+					Información:
+
+						Totales
+						envaces: 3
+						gramos:  490 g
+
+				La opcion de registrar nuevo lote
+					<registrar nuevo lote>
+						se indica la cantidad
+						se indica el lugar donde va estar, numero del estante y el tramo que ocupa.
+						fin
+
+			si no hay envaces se muestra
+
+				<<se informa que no hay envaces>>
+
+				Los datos precargados
+					sistema-> nombre de la familia: Acetato
+					sistema-> nombre de la sustancia: sodio
+					sistema-> nr: 427
+					sistema-> prencentación: 200g
+					sistema-> fabricante: Merck
+					sistema-> Codigo de Barras de la sustancia: {232003222132}
+
+				La opcion de registrar nuevo lote
+					<registrar nuevo lote>
+
+						usuario-> cantidad: 10	-> int
+						usuario-> estante: 1	-> varchart
+						usuario-> tramo: 1 	-> varchart
+
+						se indica la cantidad
+						se indica el lugar donde va estar, numero del estante y el tramo que ocupa.
+						fin
+
+
+	no existe el codigo de barras.
+		Se informa que se debe pre-cargar los datos genericos de la nueva precentacion de la sustancia quimica.
+		fin
+
+
+Generar un Solicitud.
+
+El solicitante busca es el codigo de barra del envace y especifica la cantidad que necesita.
+
+Menu->Familia->Sustancia
+
+sistema-> nombre de la familia: Acetato
+sistema-> nombre de la sustancia: sodio
+sistema-> nr: 427
+
+
+
+
+		 C EN 	  Estante	Tramo  fabricante	Codigo de Barras del envace
+	1->  [190] g  [1]		[1]	 				{32165813215132}
+	2->  [200] g  [1]		[1]					{25475562131365}
+	3->  [100] g  [2]		[1]					{32165813352135}
+
+
+
+
+Selecion de categoria (Familia->Sustancia).
+-------------------------------------------------
+control_number
+
+containers
+-id
+-category_id
+-laboratoy_id
+-stand
+-section
+--deleted
+--created
+--modified
+
+******************************************************
+
+control_numbers
+-id
+-category_id
+-control_number
+--deleted
+--created
+--modified
+
+laboratories
+-id
+-name
+--deleted
+--created
+--modified
+
+******************************************************
