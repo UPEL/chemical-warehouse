@@ -236,7 +236,7 @@ Menu >>
 
 ## Selección de categoría (Familia->Sustancia). 
 
-
+```
 containers
   -id
   -category_id
@@ -261,10 +261,12 @@ laboratories
   --deleted
   --created
   --modified
+```
 
 
 # 2 nota 
 
+```
 Registrar nueva Sustancia: registro generico de la sustancia química. 
   -> Familia a la que pertenece la sustancia química.
   -> Nombre de la sustancia
@@ -276,6 +278,8 @@ Registrar nueva presentación:
   -> Unidad métrica:  @-> gramos, O-> mililitros
   -> Laboratorio Fabricante de la sustancia química 
   -> Código de barra:  
+```
+
 
 
 ```
